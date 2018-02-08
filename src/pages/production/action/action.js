@@ -1,5 +1,6 @@
 import * as pro from './action-type';
 import API from '@/api/api';
+import {actionCreator as makeActionCreator, actionDispatch} from '@/utils/actionCreator'
 
 // 初始化获取商品数据，保存至redux
 export const getProData = () => {
@@ -12,36 +13,22 @@ export const getProData = () => {
         item.selectNum = 0;
         return item;
       })
-      dispatch({
-        type: pro.GETPRODUCTION,
-        dataList: result,
-      })
+      actionDispatch(pro.GETPRODUCTION, 'dataList')(dispatch, result)
     }catch(err){
       console.error(err);
     }
   }
 }
 
-// 选择商品
-export const togSelectPro = index => {
-  return {
-    type: pro.TOGGLESELECT,
-    index,
-  }
-}
+export const togSelectPro = makeActionCreator(pro.TOGGLESELECT, 'index') //选择商品
+export const editPro = makeActionCreator(pro.EDITPRODUCTION, 'index', 'selectNum') //编辑商品
+export const clearSelected = makeActionCreator(pro.CLEARSELECTED) //清空选择
 
-// 编辑商品
-export const editPro = (index, selectNum) => {
-  return {
-    type: pro.EDITPRODUCTION,
-    index,
-    selectNum,
-  }
-}
-
-// 清空选择
-export const clearSelected = () => {
-  return {
-    type: pro.CLEARSELECTED,
-  }
-}
+// 示例的样板代码 便于看懂
+// export const tempFoo = (index, bar) => {
+//   return {
+//     type: pro.foo,
+//     index,
+//     bar
+//   }
+// }
