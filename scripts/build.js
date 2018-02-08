@@ -13,7 +13,7 @@ process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
 process.env.STATIC_ENV = 'production';
 if(process.env.STATIC_ENV === 'production'){
-  process.env.PUBLIC_URL = '/pxq';
+  process.env.PUBLIC_URL = '/build';
 }
 
 // Makes the script crash on unhandled rejections instead of silently
@@ -97,13 +97,21 @@ measureFileSizesBeforeBuild(paths.appBuild)
       const publicUrl = paths.publicUrl;
       const publicPath = config.output.publicPath;
       const buildFolder = path.relative(process.cwd(), paths.appBuild);
-      printHostingInstructions(
-        appPackage,
-        publicUrl,
-        publicPath,
-        buildFolder,
-        useYarn
-      );
+      
+      if (publicPath !== '/' && process.env.PUBLIC_URL) {
+        console.log(`The project was built assuming it is hosted at ${chalk.green(publicPath)}.`);
+        console.log("you can control this with the process.env.PUBLIC_URL field in your " + chalk.cyan("scripts/build.js"))
+        console.log();
+        console.log(`The ${chalk.cyan('build')} folder is ready to be deployed.`);
+      } else {
+        printHostingInstructions(
+          appPackage,
+          publicUrl,
+          publicPath,
+          buildFolder,
+          useYarn
+        );
+      }
     },
     err => {
       console.log(chalk.red('Failed to compile.\n'));

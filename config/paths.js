@@ -18,7 +18,8 @@ const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const envPublicUrl = process.env.PUBLIC_URL;
-const appName = envPublicUrl&&envPublicUrl.split('/').reverse()[0];
+const appName = 'build'
+// const appName = envPublicUrl&&envPublicUrl.split('/').reverse()[0];
 
 function ensureSlash(path, needsSlash) {
   const hasSlash = path.endsWith('/');
