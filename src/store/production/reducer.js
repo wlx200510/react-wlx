@@ -1,4 +1,4 @@
-import * as pro from './action-type';
+import * as pro from '@/pages/production/action/action-type';
 import Immutable from 'immutable';
 
 let defaultState = {
@@ -16,32 +16,29 @@ let defaultState = {
    */
   dataList: [],
 }
-
-export const proData = (state = defaultState, action) => {
-  let imuDataList;
-  let imuItem;
-  switch(action.type){
-    case pro.GETPRODUCTION: 
-      return {...state, ...action}
-    case pro.TOGGLESELECT:
-      //避免引用类型数据，使用immutable进行数据转换 
-      imuDataList = Immutable.List(state.dataList);
-      imuItem = Immutable.Map(state.dataList[action.index]);
-      imuItem = imuItem.set('selectStatus', !imuItem.get('selectStatus'));
-      imuDataList = imuDataList.set(action.index, imuItem);
-      // redux必须返回一个新的state
-      return {...state, ...{dataList: imuDataList.toJS()}};
-    case pro.EDITPRODUCTION:
-      //避免引用类型数据，使用immutable进行数据转换 
-      imuDataList = Immutable.List(state.dataList);
-      imuItem = Immutable.Map(state.dataList[action.index]);
-      imuItem = imuItem.set('selectNum', action.selectNum);
-      imuDataList = imuDataList.set(action.index, imuItem);
-      // redux必须返回一个新的state
-      return {...state, ...{dataList: imuDataList.toJS()}};
-    // 清空数据
-    case pro.CLEARSELECTED:
-      imuDataList = Immutable.fromJS(state.dataList);
+let imuDataList, imuItem;
+const ACTION_HANDLERS = { //里面的函数逻辑可以写得更复杂 用ES6的类属性指定
+  [pro.GETPRODUCTION] : (state, action) => ({...state, ...action}),
+  [pro.TOGGLESELECT]: (state, action) => {
+    //避免引用类型数据，使用immutable进行数据转换
+    imuDataList = Immutable.List(state.dataList);
+    imuItem = Immutable.Map(state.dataList[action.index]);
+    imuItem = imuItem.set('selectStatus', !imuItem.get('selectStatus'));
+    imuDataList = imuDataList.set(action.index, imuItem);
+    // redux必须返回一个新的state
+    return {...state, ...{dataList: imuDataList.toJS()}};
+  },
+  [pro.EDITPRODUCTION]: (state, action) => {
+    //避免引用类型数据，使用immutable进行数据转换 
+    imuDataList = Immutable.List(state.dataList);
+    imuItem = Immutable.Map(state.dataList[action.index]);
+    imuItem = imuItem.set('selectNum', action.selectNum);
+    imuDataList = imuDataList.set(action.index, imuItem);
+    // redux必须返回一个新的state
+    return {...state, ...{dataList: imuDataList.toJS()}};
+  },
+  [pro.CLEARSELECTED]: (state, action) => {
+    imuDataList = Immutable.fromJS(state.dataList);
       for (let i = 0; i < state.dataList.length; i++) {
         imuDataList = imuDataList.update(i, item => {
           item = item.set('selectStatus', false);
@@ -50,7 +47,10 @@ export const proData = (state = defaultState, action) => {
         })
       }
       return {...state, ...{dataList: imuDataList.toJS()}};
-    default: 
-      return state;
   }
+}
+
+export const proData = (state = defaultState, action = {}) => {
+  const handler = ACTION_HANDLERS[action.type]
+  return handler ? handler(state, action) : state
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { is, fromJS } from 'immutable';
 import { connect } from 'react-redux';
-import { getProData, togSelectPro, editPro } from '@/store/production/action';
+import { getProData, togSelectPro, editPro } from './action/action';
 import PropTypes from 'prop-types';
 import PublicHeader from '@/components/header/header';
 import './production.scss';

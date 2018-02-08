@@ -305,6 +305,18 @@ function mapDispatchToProps(dispatch) {
 ```
 
 mapDispatchToProps返回的对象其属性其实就是一个个actionCreator，因为已经和dispatch绑定，所以当调用actionCreator时会立即发送action，而不用手动dispatch。ownProps的变化也会触发mapDispatchToProps。
+当引入redux-thunk时，这个actionCreator也可以是个函数，这时相当于这个函数默认传入了dispatch和getState两个参数，从而在异步的流程中手动调用dispatch来完成所需的逻辑，这个主要用于异步获取数据时使用。
+
+```javascript
+function anaddSomething() {
+  return async (dispatch, getState)=>{
+    const res = await axios.get('/some', {data: '1'})
+    if (res.data.code === '200') {
+      dispatch({type: 'ADD'})
+    }
+  }
+}
+```
 
 **mergeProps(stateProps, dispatchProps, ownProps)：**
 > 将mapStateToProps() 与 mapDispatchToProps()返回的对象和组件自身的props合并成新的props并传入组件。默认返回 Object.assign({}, ownProps, stateProps, dispatchProps) 的结果。
@@ -355,7 +367,7 @@ import { Router, Route, Redirect, IndexRoute, browserHistory, hashHistory } from
 
 4、创建actionCreators和reducers，并用combineReducers将所有的reducer合并成一个大的reduer。利用createStore创建store并引入combineReducers和applyMiddleware。
 
-5、利用connect将actionCreator，reuder和顶层的ui组件进行关联并返回一个新的组件。
+5、利用connect将actionCreator，reducer和顶层的ui组件进行关联并返回一个新的组件。
 
 6、利用connect返回的新的组件配合react-router进行路由的部署，返回一个路由组件Router。
 
@@ -372,3 +384,7 @@ import { Router, Route, Redirect, IndexRoute, browserHistory, hashHistory } from
 上图的顶层ui组件属性总共有18个，如果刚刚接触react，可能对这些属性怎么来的感到困惑，其实这些属性来自五个地方：
 
 组件自定义属性1个，actionCreator返回的对象6个，reducer返回的state4个，Connect组件属性0个，以及Router注入的属性7个。
+
+本项目在原仓库基础上重构了reducer的写法，通过ES6的键名用变量，避免了switch-case的冗余嵌套写法
+
+将store里面的action移动到了各个页面下，因为所需action和具体action逻辑实际是与业务强相关的，reducer与store强相关。

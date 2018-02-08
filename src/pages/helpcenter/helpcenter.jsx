@@ -15,7 +15,7 @@ export default class HelpCenter extends Component {
         <PublicHeader title="帮助中心" record />
         <article className="context-con">
           <h2>介绍</h2>
-          <p>本项目主要用于理解 react 和 redux 的编译方式，以及 react + redux 之间的配合方式</p>
+          <p>本项目主要用于理解 react 和 redux 的编译方式，项目的合理架构，以及 react + redux 之间的配合方式与 redux-thunk 的使用</p>
           <h2>技术要点</h2>
           <p>react：v16.2</p>
           <p>redux：v3.7</p>

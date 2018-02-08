@@ -45,6 +45,3 @@ export const clearSelected = () => {
     type: pro.CLEARSELECTED,
   }
 }
-
-
-

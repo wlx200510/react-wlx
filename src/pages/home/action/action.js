@@ -23,4 +23,3 @@ export const clearData = () => {
     type: home.CLEARDATA,
   }
 }
-
